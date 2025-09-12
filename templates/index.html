@@ -1,14 +1,136 @@
 <!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UFT-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Primera prueba Flask GUI</title>
-    </head>
 
-    <body>
-        <h1> Hola Mundo 😈</h1>
-        <p> Quiero fumar</p>
-        <p> Los cambios se guardaron correctamente en git</p>
-    </body>
+<!--Checar tcp - ip -->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot control GUI</title>
+    <!-- Cargar CSS desde static -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app">
+        <!-- Barra superior -->
+        <header class="top-bar">
+            <h1>Estatus general</h1>
+            <div class="top-buttons">
+                <button class="config-button">
+                    <!-- Cargar imagen desde static -->
+                    <img src="{{ url_for('static', filename='img/icon_config.png') }}" alt="Configuracion">
+                </button>
+                <button class="exit-button">✖</button>
+            </div>
+        </header>
+    </div>
+
+    <main>
+        <main class="layout-inf">
+
+            <!--Panel izquierdo-->
+            <aside class="status-panel">
+                <!--Nivel de bateria-->
+                <div class="card">
+                    <h3> Batería </h3>
+                    <p>🔋 75%</p>
+                </div>
+                <!--Niveles CO2-->
+                <div class="card">
+                    <h3>CO₂</h3>
+                    <p>🌬️ 450 ppm</p>
+                </div>
+                <!--Estatus del robot-->
+                <div class="card">
+                    <h3>Estatus</h3>
+                    <p>🛑 Detenido</p>
+                </div>
+            </aside>            
+
+            <!--Panel Central-->
+            <aside class="status-panel">
+                <div class="card">
+                    <!--Estatus Lamparas UVC-->
+                    <h3>Lamparas UVC</h3>
+                    <div class="status-row">
+                        <div class="indicator indicator-on"></div>
+                        <span>ON</span>
+                    </div>
+
+                    <!--Estatus Lamparas UVC-->
+                    <h3>Lamparas UVC</h3>
+                    <div class="status-row">
+                        <div class="indicator indicator-on"></div>
+                        <span>ON</span>
+                    </div>
+                    
+                    <!--Estatus del Robot-->
+                    <h3>Estatus del robot</h3>
+                    <div class="status-row">
+                        <div class="indicator indicator-off"></div>
+                        <span>Detenido</span>
+                    </div>
+                    
+                </div>
+            </aside>
+            
+            <!--Panel derecho-->
+            <aside class="status-panel">
+                <div class="card">
+                    <!--Botonos de control-->
+                    <div class="control-panel">
+
+                        <!--Boton HOME-->
+                        <button id="home-btt" class="btn">
+                            <img src="{{ url_for('static', filename='img/icon_home.png') }}" alt="Configuracion">
+                            <span>CASA</span>
+                        </button>
+
+                        <!--Boton UVC-->
+                        <button id="uvc-btt" class="btn">
+                            <img src="{{ url_for('static', filename='img/icon_uvc.png') }}" alt="Configuracion">
+                            <span>LAMPARAS UVC</span>
+                        </button>
+
+                        <!--Boton Paro de emergencia-->
+                        <button id="stop-bt" class="btn-stop">
+                            <img src="{{ url_for('static', filename='img/icon_stop.png') }}" alt="Configuracion">
+                            <span>PARO EMERGENCIA</span>
+                        </button>
+
+                    </div>
+                </div>
+            </aside>
+
+        </main>
+
+    <main class="visual-layout">
+    <!-- Sección Mapa -->
+    <section class="visual-section">
+        <header class="section-header">
+        <h2>Mapa</h2>
+        </header>
+        <div class="map-panel">
+        [Mapa del robot]
+        </div>
+    </section>
+
+    <!-- Sección Cámara -->
+    <section class="visual-section">
+    <div class="layout-camera">
+        <h2>Cámara</h2>
+        <button id="toggle-cam" class="show-camara">
+            <img id="cam-icon" src ="{{url_for('static', filename='img/icon_video.png')}}" alt="Camara" width="24" height="24">
+        </button>
+    </div>
+    <div id="camera-panel" class="camera-panel">
+        [Vista de cámara]
+    </div>
+    </section>
+
+    </main>
+
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
 </html>

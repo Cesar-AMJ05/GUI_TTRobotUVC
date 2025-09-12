@@ -1,0 +1,214 @@
+:root {
+  --bg: #303030;
+  --section-color: #1C1D1E;
+  --primary: #1abc9c;
+  --title: #DDFF86;
+  --mint: #EBFFF6;
+  --stop: #e74c3c;
+  --green_p: #004D43;
+  --neon_green: #27EAA6;
+  --depp_green: #004D43;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: var(--bg);
+  color: var(--mint);
+}
+
+.app {
+  max-width: 1200px;
+  margin: auto;
+  padding: 10px;
+  background-color: var(--bg);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--mint);
+  color: white; /* lo dejamos en blanco */
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.top-bar {
+  background-color: var(--section-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;           
+  padding: 5px 10px;
+  width: 100%;     
+  top: 0;
+  left: 0;
+}
+
+.top-buttons {
+  display: flex;
+  gap: 10px; /* espacio entre botones */
+}
+
+.top-bar h1 {
+  margin: 0; /* elimina márgenes extra del h1 */
+}
+
+.layout-inf {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.75fr;
+  gap: 10px;
+  height: 40vh;
+}
+
+.status-panel {
+  background: var(--section-color);
+  border-radius: 10px;
+  padding: 5px 15px;
+  color: var(--mint);
+  cursor: pointer;
+  font-size: 0.95rem; /* más accesible */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  overflow-y: auto;
+}
+
+.status-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.status-panel::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
+}
+.status-panel::-webkit-scrollbar-track {
+  background: var(--section-color);
+}
+
+.card { 
+  background: var(--section-color);
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.app h1 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--title);
+}
+
+.status-panel h3 {
+  margin: 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.config-button img {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.control-panel {
+  margin: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.control-panel img {
+  width: 25px;
+  height: 25px;
+  margin-right: 8px;
+  object-fit: contain;
+}
+
+.btn {
+  background: var(--mint);
+  color: var(--green_p);
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-stop {
+  @extend .btn; /* si usas preprocesador, sino copias base */
+  color: var(--stop);
+}
+.btn-stop:hover {
+  background: var(--stop);
+  color: white;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+.indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.indicator-on {
+  background: var(--neon_green);
+  box-shadow: 0 0 10px var(--neon_green);
+}
+.indicator-off {
+  background: var(--stop);
+  box-shadow: 0 0 10px var(--stop);
+}
+.indicator-warning {
+  background: #f1c40f;
+  box-shadow: 0 0 10px #f1c40f;
+}
+
+
+.visual-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.visual-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.section-header {
+  background-color: var(--section-color);
+  color: var(--neon_green);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.map-panel, .camera-panel {
+  background-color: var(--section-color);
+  border-radius: 10px;
+  padding: 10px;
+  flex: 1;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.layout-camera {
+  background: var(--section-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;           
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--neon_green)z;
+}
