@@ -66,7 +66,7 @@ Integrated Camera: Integrated C (usb-0000:00:14.0-6):
 ## 📌 Prueba local en servidor
 
 ```bash
-ffmpeg -f v4l2 -i /dev/video2 -vcodec mpeg1video -f mpegts udp://127.0.0.1:1234
+ffmpeg -f v4l2 -i /dev/video2 -vcodec mpeg1video -f mpegts udp://127.0.0.1:1235
 ```
 
 * Python recibe el stream:
