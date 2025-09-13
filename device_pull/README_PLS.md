@@ -4,8 +4,8 @@
 
 ## 📌 Objetivo
 
-Este proyecto permite transmitir el video de una cámara desde **Laptop 1** (o Orange Pi 5 Max) a **Laptop 2**, que actúa como servidor Flask, para mostrar el video en una página web.
-El objetivo es mantener la **Laptop 1 libre de carga**, evitando el uso directo de OpenCV para enviar frames.
+Este proyecto permite transmitir el video de una cámara desde **Emisor o Dispositivo cliente** (en este caso Orange Pi 5 Max) a **servidor**, que actúa como servidor Flask, para mostrar el video en una página web.
+El objetivo es mantener la **Emisor libre de carga**, evitando el uso directo de OpenCV para enviar frames.
 
 ---
 
@@ -63,7 +63,7 @@ Integrated Camera: Integrated C (usb-0000:00:14.0-6):
 
 ---
 
-## 📌 Prueba local en Laptop 2
+## 📌 Prueba local en servidor
 
 ```bash
 ffmpeg -f v4l2 -i /dev/video2 -vcodec mpeg1video -f mpegts udp://127.0.0.1:1234
@@ -112,12 +112,12 @@ cap = cv2.VideoCapture("rtsp://127.0.0.1:8554/live.sdp")
 ## 📌 Flujo de transmisión
 
 ```
-Laptop 1 / Orange Pi 5 Max
+Emisor / Orange Pi 5 Max
     FFmpeg captura y codifica video
           │
           │ UDP / TCP / RTSP
           ▼
-Laptop 2 (Servidor Flask)
+servidor (Servidor Flask)
     OpenCV recibe stream
     Flask sirve MJPEG
           │
@@ -130,8 +130,4 @@ Página Web (<img src="/video_feed">)
 * OpenCV solo recibe y genera JPEG para web.
 * MJPEG en Flask evita decodificar H.264 en el navegador.
 
----
 
-Si quieres, puedo prepararte **la versión con Flask + MJPEG ya lista para copy-paste** también, integrada con este README, para que solo ejecutes y veas la cámara en la web.
-
-¿Quieres que haga eso?

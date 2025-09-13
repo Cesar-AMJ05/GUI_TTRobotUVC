@@ -107,7 +107,7 @@
     <!-- Sección Mapa -->
     <section class="visual-section">
         <header class="section-header">
-        <h2>Mapa</h2>
+        <h3>Mapa</h3>
         </header>
         <div class="map-panel">
         [Mapa del robot]
@@ -117,13 +117,15 @@
     <!-- Sección Cámara -->
     <section class="visual-section">
     <div class="layout-camera">
-        <h2>Cámara</h2>
+        <header class="section-header">
+            <h3>Cámara</h3>
+        </header>
         <button id="toggle-cam" class="show-camara">
             <img id="cam-icon" src ="{{url_for('static', filename='img/icon_video.png')}}" alt="Camara" width="24" height="24">
         </button>
     </div>
     <div id="camera-panel" class="camera-panel">
-        [Vista de cámara]
+        <img id="camera-stream" src="{{ url_for('video_feed') }}" width="640" height="480">
     </div>
     </section>
 

@@ -51,7 +51,7 @@ header {
 }
 
 .top-bar h1 {
-  margin: 0; /* elimina márgenes extra del h1 */
+  margin: 0; 
 }
 
 .layout-inf {
@@ -67,7 +67,7 @@ header {
   padding: 5px 15px;
   color: var(--mint);
   cursor: pointer;
-  font-size: 0.95rem; /* más accesible */
+  font-size: 0.95rem; 
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   overflow-y: auto;
 }
@@ -193,7 +193,9 @@ header {
   color: var(--neon_green);
   padding: 8px 12px;
   border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 
 .map-panel, .camera-panel {
   background-color: var(--section-color);
@@ -201,6 +203,17 @@ header {
   padding: 10px;
   flex: 1;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  
+}
+
+.show-camara {
+  background: var(--mint);
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 4px;
+  margin: 0;
+  height: fit-content;
+  width: fit-content;
 }
 
 .layout-camera {
@@ -211,4 +224,8 @@ header {
   padding: 8px 12px;
   border-radius: 8px;
   color: var(--neon_green)z;
+}
+
+.camera-stream{
+  transition: opacity 0.25s ease;
 }

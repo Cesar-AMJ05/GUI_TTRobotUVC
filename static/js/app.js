@@ -1,22 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Elementos del DOM
     const toggleBtn = document.getElementById("toggle-cam");
-    const cameraPanel = document.getElementById("camera-panel");
     const camIcon = document.getElementById("cam-icon");
-    const socket = io();  // ← solo aquí
+    const camStream = document.getElementById("camera-stream");
 
-    // Escuchar evento del servidor
+    // Conexión SocketIO
+    const socket = io();
+
+    // Escuchar el estado de la cámara desde el servidor
     socket.on("camera_status", (data) => {
-        console.log("Estado cámara recibido:", data);
         if (data.visible === false) {
-            cameraPanel.style.display = "none";
+            camStream.src = "/static/img/no_video.png"; // placeholder
             camIcon.src = "/static/img/icon_no_video.png";
         } else {
-            cameraPanel.style.display = "block";
+            camStream.src = "/video_feed"; // vuelve a mostrar el stream
             camIcon.src = "/static/img/icon_video.png";
         }
     });
 
-    // Emitir evento al servidor al hacer click
+
+    // Emitir evento al servidor al hacer click en el botón
     toggleBtn.addEventListener("click", () => {
         socket.emit("toggle_camera");
     });
