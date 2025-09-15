@@ -4,7 +4,7 @@ import socketio
 sio = socketio.Client()
 
 # Conectarse al servidor (IP de tu servidor Flask)
-sio.connect("http://127.0.0.1:5000/")  # <- cambia la IP
+sio.connect("http://192.168.1.17:5000/")  # <- cambia la IP
 
 # Escuchar el evento enviado desde la web
 @sio.on("home-btt")
