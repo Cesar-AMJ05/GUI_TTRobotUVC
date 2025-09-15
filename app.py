@@ -19,7 +19,7 @@ camera_visible = True
     Si se usa UDP O TCP
     Para produccio se recomienda  RTSP
 """
-cap = cv2.VideoCapture("udp://127.0.0.1:1235") 
+cap = cv2.VideoCapture("udp://192.168.1.17:1236") 
 
 
 
