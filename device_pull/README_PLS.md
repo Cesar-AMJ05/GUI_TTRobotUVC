@@ -93,6 +93,11 @@ cv2.destroyAllWindows()
 
 ---
 
+## Pruebas desde emisor wn Windows 10
+```bash
+ffmpeg -f dshow -i video="USB 2.0 Camera" -vcodec mpeg1video -f mpegts udp://192.168.1.17:1236
+```
+
 ## 📌 Producción (Orange Pi 5 Max)
 
 ```bash
