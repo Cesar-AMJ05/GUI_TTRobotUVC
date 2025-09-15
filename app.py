@@ -6,9 +6,11 @@ from flask import Flask, render_template, Response
 from flask_socketio import SocketIO, emit
 import cv2 
 
+
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 camera_visible = True
 #Ojo: Verificar el protocolo y la IP
@@ -36,19 +38,20 @@ def generate_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
+
+#Ruta de la página principal
 @app.route("/")
 def home():
     return render_template("index.html")
 
-
-
-
+#Ruta para el stream de video
 @app.route("/video_feed")
 def video_feed():
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+# Evento para alternar la visibilidad de la cámara
 @socketio.on("toggle_camera")
 def toggle_camera():
     global camera_visible
@@ -57,6 +60,13 @@ def toggle_camera():
     # Avisar a todos los clientes conectados
     emit("camera_status", {"visible": camera_visible}, broadcast=True)
 
+@socketio.on("go_home")
+def handle_home_btt():
+    print("🔘 Botón Home presionado")
+    # Aquí puedes agregar la lógica para manejar el botón Home
+    emit("home_response", {"message": "Botón Home presionado"}, broadcast=True)
+
+
 # Evitar debug=True mientras pruebas stream MJPEG
-socketio.run(app, host='0.0.0.0', port=5000)
+socketio.run(app, host='0.0.0.0', port=5000, debug=False)
 

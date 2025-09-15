@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Elementos del DOM
+
+    //Boton he icono de cámara
     const toggleBtn = document.getElementById("toggle-cam");
     const camIcon = document.getElementById("cam-icon");
     const camStream = document.getElementById("camera-stream");
+
+    //Boton de control de regreso a casa
+    const homeBtn = document.getElementById("home-btt");
+
 
     // Conexión SocketIO
     const socket = io();
@@ -18,6 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Emitir evento al servidor al hacer click en el botón de regreso a casa
+    homeBtn.addEventListener("click", () => {
+        socket.emit("go_home");
+    });
 
     // Emitir evento al servidor al hacer click en el botón
     toggleBtn.addEventListener("click", () => {

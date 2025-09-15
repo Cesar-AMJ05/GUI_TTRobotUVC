@@ -2,7 +2,7 @@ from flask import Flask, Response
 import cv2
 
 app = Flask(__name__)
-cap = cv2.VideoCapture("udp://127.0.0.1:1234")
+cap = cv2.VideoCapture("udp://127.0.0.1:1235")
 
 def generate_frames():
     while True:
