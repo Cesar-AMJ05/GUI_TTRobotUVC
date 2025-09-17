@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Elementos del DOM
 
-    //Boton he icono de cámara
+    //Boton GUI -Control manual
+    const controlBtn = document.getElementById("control-int");
+    //Boton de icono de cámara
     const toggleBtn = document.getElementById("toggle-cam");
     const camIcon = document.getElementById("cam-icon");
     const camStream = document.getElementById("camera-stream");
@@ -33,4 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleBtn.addEventListener("click", () => {
         socket.emit("toggle_camera");
     });
+
+    // Redirigir a la página de control manual al hacer click en el botón
+    controlBtn.addEventListener("click", () => {
+        window.location.href = "/control.html";
+    });
+
 });

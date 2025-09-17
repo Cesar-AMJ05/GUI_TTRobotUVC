@@ -15,11 +15,13 @@
         <header class="top-bar">
             <h1>Estatus general</h1>
             <div class="top-buttons">
-                <button class="config-button">
+                <button class="external-button">
                     <!-- Cargar imagen desde static -->
                     <img src="{{ url_for('static', filename='img/icon_config.png') }}" alt="Configuracion">
                 </button>
-                <button class="exit-button">✖</button>
+                <button id="control-int" class="external-button">
+                    <img src="{{ url_for('static', filename='img/control_icon.png') }}" alt="Control">
+                </button>
             </div>
         </header>
     </div>

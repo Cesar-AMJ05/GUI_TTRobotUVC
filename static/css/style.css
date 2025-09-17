@@ -61,6 +61,59 @@ header {
   height: 40vh;
 }
 
+.control-layout{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.camera-panel2{
+  background: var(--section-color);
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.control-buttons-panel {
+  background: var(--section-color);
+  border-radius: 10px;
+  padding: 1em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.grid-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  justify-items: center;
+  align-items: center;
+}
+
+.robotito {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.joy-button {
+  background: var(--mint);
+  border: none;
+  padding: 10px;
+  border-radius: 25%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
 .status-panel {
   background: var(--section-color);
   border-radius: 10px;
@@ -83,6 +136,8 @@ header {
   background: var(--section-color);
 }
 
+
+
 .card { 
   background: var(--section-color);
   border-radius: 10px;
@@ -102,7 +157,16 @@ header {
   font-weight: 600;
 }
 
-.config-button img {
+.external-button {
+  background: var(--mint);
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.external-button img {
   width: 18px;
   height: 18px;
   vertical-align: middle;

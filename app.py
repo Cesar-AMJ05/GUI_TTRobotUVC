@@ -142,6 +142,11 @@ def generate_frame(udp_emisor):
 def home():
     return render_template("index.html")
 
+
+@app.route("/control.html")
+def control():
+    return render_template("control.html")
+
 #Ruta para el stream de video
 @app.route("/video_feed")
 def video_feed():
