@@ -58,7 +58,7 @@ header {
   display: grid;
   grid-template-columns: 1.2fr 1fr 0.75fr;
   gap: 10px;
-  height: 40vh;
+  height: 45vh;
 }
 
 .control-layout{
@@ -93,20 +93,20 @@ header {
 }
 
 .robotito {
-  width: 80px;
-  height: 80px;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
 }
 
 .joy-button {
-  background: var(--mint);
+  background: var(--bg);
   border: none;
   padding: 10px;
   border-radius: 25%;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 60px;
-  height: 60px;
+  width: 200px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -164,6 +164,8 @@ header {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .external-button img {
@@ -192,7 +194,7 @@ header {
   border: none;
   padding: 10px;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -200,6 +202,13 @@ header {
   background: var(--primary);
   color: white;
 }
+
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 
 .btn-stop {
   @extend .btn; /* si usas preprocesador, sino copias base */
@@ -292,4 +301,72 @@ header {
 
 .camera-stream{
   transition: opacity 0.25s ease;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -500px;   /* la escondemos fuera de la pantalla */
+  width: 300px;
+  height: 100%;
+  background: #1C1D1E;
+  color: #DDFF86;
+  padding: 20px;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+  transition: right 0.3s ease; /* animación suave */
+  z-index: 1000;
+  overflow-y: auto;
+}
+.sidebar.active{
+  right: 0; /*Aparece :o*/
+}
+
+.sidebar h2{
+  margin-top: 0;
+  color: var(--title);
+}
+.header-sidebar{
+  background-color: var(--section-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;           
+  padding: 5px;
+  width: 100%;     
+}
+
+.clear-btn{
+  background-color: var(--title);
+  color: black;
+  border: none;
+  padding: 10px;
+  margin-top: 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.clear-btn:hover{
+  background: var(--stop);
+}
+
+.control-sidebar{
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--stop);
+  cursor: pointer;
+  float: right;
+}
+
+.badge {
+  display: none; /* oculto por defecto */
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
 }

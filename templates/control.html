@@ -13,11 +13,11 @@
                 <h1>Control Manual</h1>
                 <div class="top-buttons">
                     <!-- Botón de monitor -->
-                    <button class="external-button">
+                    <button id="panel-bttn" class="external-button">
                         <img src="{{ url_for('static', filename='img/monitor_icon.png') }}" alt="Monitor">
                     </button>
                     <!--Boton notificaciones-->
-                    <button class="notificacion">Notificaciones</button>
+                    <button  class="notificacion">Notificaciones</button>
                 </div>
             </header>
         </div>
@@ -65,6 +65,7 @@
                     
                 </div>
             </aside>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/controljs.js') }}"></script>
     </body>
-    
 </html>

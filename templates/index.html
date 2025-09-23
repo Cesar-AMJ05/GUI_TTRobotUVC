@@ -15,15 +15,27 @@
         <header class="top-bar">
             <h1>Estatus general</h1>
             <div class="top-buttons">
-                <button class="external-button">
-                    <!-- Cargar imagen desde static -->
-                    <img src="{{ url_for('static', filename='img/icon_config.png') }}" alt="Configuracion">
+                <button id="noti-bttn" class="external-button">
+                    <img src="{{ url_for('static', filename='img/icon_bell.png') }}" alt="Notificaciones">
+                    <span id="badge" class="badge">0</span>
                 </button>
                 <button id="control-int" class="external-button">
                     <img src="{{ url_for('static', filename='img/control_icon.png') }}" alt="Control">
                 </button>
             </div>
         </header>
+
+        <div id="sidebar" class="sidebar">
+            <div class="header-sidebar">
+                <h3>🔔 Notificaxiones</h3>                  
+                <button id="close-sidebar" class="close-btn">✖</button>            
+            </div>
+                <div id="noti-list">
+                    <p id="no-noti-msg">🐌 Sin notificaciones</p>
+                    <ul></ul>
+                </div>
+            <button id="clear-btn" class="clear-btn">🗑 Vaciar</button>
+        </div>
     </div>
 
     <main>
@@ -52,24 +64,24 @@
             <aside class="status-panel">
                 <div class="card">
                     <!--Estatus Lamparas UVC-->
-                    <h3>Lamparas UVC</h3>
+                    <h3>EStado de red</h3>
                     <div class="status-row">
-                        <div class="indicator indicator-on"></div>
-                        <span>ON</span>
+                        <div id="indicator-online" class="indicator indicator-off"></div>
+                        <span id="text-online">Desconectado</span>
                     </div>
 
                     <!--Estatus Lamparas UVC-->
                     <h3>Lamparas UVC</h3>
                     <div class="status-row">
-                        <div class="indicator indicator-on"></div>
-                        <span>ON</span>
+                        <div id="indicator-lamps" class="indicator indicator-off"></div>
+                        <span id="text-lamps">Desactivado</span>
                     </div>
                     
                     <!--Estatus del Robot-->
                     <h3>Estatus del robot</h3>
                     <div class="status-row">
-                        <div class="indicator indicator-off"></div>
-                        <span>Detenido</span>
+                        <div id="indicator-status" class="indicator indicator-off"></div>
+                        <span id="text-status">Detenido</span>
                     </div>
                     
                 </div>
@@ -81,6 +93,11 @@
                     <!--Botonos de control-->
                     <div class="control-panel">
 
+                        <!-- Boton Start-->
+                        <button id="start-btt" class="btn">
+                            <img src="{{ url_for('static', filename='img/icon_play.png') }}" alt="Configuracion">
+                            <span>INICIO</span>
+                        </button>
                         <!--Boton HOME-->
                         <button id="home-btt" class="btn">
                             <img src="{{ url_for('static', filename='img/icon_home.png') }}" alt="Configuracion">
@@ -94,7 +111,7 @@
                         </button>
 
                         <!--Boton Paro de emergencia-->
-                        <button id="stop-bt" class="btn-stop">
+                        <button id="stop-btt" class="btn-stop">
                             <img src="{{ url_for('static', filename='img/icon_stop.png') }}" alt="Configuracion">
                             <span>PARO EMERGENCIA</span>
                         </button>
