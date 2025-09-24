@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Botón "Home"
     homeBtn.addEventListener("click", () => {
-        socket.emit("go_home");
+        socket.emit("move-home");
     });
 
     // Evento para  "Lampras UVC"  

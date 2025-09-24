@@ -189,13 +189,15 @@ def handle_flag_start(data):
 
 
 # Evento para regreso a casa
-@socketio.on("go_home")
+@socketio.on("move-home")
 def handle_home_btt():
     print("🔘 Botón Homet presionado")
     # Aquí puedes agregar la  lógica para manejar el botón Home
-    emit("home_response", {"message": "Botón Home presionado"}, broadcast=True)
-      # Notificación para la UI
-    emit("nueva_notificacion", {"msg": "🏠 Botón Home presionado"}, broadcast=True)
+    emit("go-home", {"message": "Botón Home presionado"}, broadcast=True)
+@socketio.on("go-home")
+def handle_home_flag(data):
+    print("RE - Regreso a cada", data)
+    emit("nueva_notificacion", {"msg": "A casa 😛"}, broadcast=True)
 
 
 # Eventos para conmutar el estado de las lamparas UVC (para permitir que se enciendan)
