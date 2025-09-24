@@ -98,6 +98,11 @@ cv2.destroyAllWindows()
 ffmpeg -f dshow -i video="USB 2.0 Camera" -vcodec mpeg1video -f mpegts udp://192.168.1.17:1236
 ```
 
+Verificar siempre la ip del servidor de manera local
+```bash
+ffmpeg -f dshow -rtbufsize 100M -i video="c922 Pro Stream Webcam" -vf scale=640:480 -r 20 -vcodec mpeg1video -f mpegts "udp://192.168.0.108:1236?pkt_size=1316"
+```
+
 ## 📌 Producción (Orange Pi 5 Max)
 
 ```bash
