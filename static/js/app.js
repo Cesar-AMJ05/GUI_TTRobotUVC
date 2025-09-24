@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Elemenmtos de visuales
         //Indicador de estado del conexion de robot
     const indicator_online = document.getElementById("indicator-online");
-    const text_2ind_online = document.getAnimations("text-online");
+    const text_2ind_online = document.getElementById("text-online");
         //Indicador de estado de lamparas UVC
     const indicator_lamps = document.getElementById("indicator-lamps");
     const text_2ind_lamps = document.getElementById("text-lamps");
@@ -47,9 +47,44 @@ document.addEventListener("DOMContentLoaded", () => {
     // Conexión SocketIO
     const socket = io();
 
-    socket.on("connect", () =>{
-        console.log("Navegador conectado al servidor");
-        socket.emit("emisor-online");
+    window.addEventListener("load", () => {
+        // Cargamos los datos de estado online 
+        const status2online = localStorage.getItem("state_online") == "true";
+        if(status2online){
+            indicator_online.classList.add("indicator-on")
+            indicator_online.classList.remove("indicator-off")
+            text_2ind_online.textContent = "Conectado"
+        }else{
+            indicator_online.classList.add("indicator-off")
+            indicator_online.classList.remove("indicator-on")
+            text_2ind_online.textContent = "Desconectado"
+        }
+        // Cargamos los datos de lampara UVC
+        const status2uvc = localStorage.getItem("state_lamps") === "true"; 
+         if(status2uvc){
+            indicator_lamps.classList.add("indicator-on");
+            indicator_lamps.classList.remove("indicator-off");
+            text_2ind_lamps.textContent = "Activado";
+        } else {
+            indicator_lamps.classList.add("indicator-off");
+            indicator_lamps.classList.remove("indicator-on");
+            text_2ind_lamps.textContent = "Desactivado";
+        }
+
+    });
+
+    socket.on("is-online", (data) =>{
+        localStorage.setItem("state_online", data.success);
+        console.log("Estado del emisor:", data.status);
+        if(data.success){
+            indicator_online.classList.add("indicator-on")
+            indicator_online.classList.remove("indicator-off")
+            text_2ind_online.textContent = "Conectado"
+        }else{
+            indicator_online.classList.add("indicator-off")
+            indicator_online.classList.remove("indicator-on")
+            text_2ind_online.textContent = "Desconectado"
+        }
     });
 
     // Escuchar estado de la cámara
@@ -66,9 +101,17 @@ document.addEventListener("DOMContentLoaded", () => {
     //Boton "Start"
     startBtn.addEventListener("click", () => {
         socket.emit("start-process");
+    });
+    socket.on("go-robot", (data) => {
+        localStorage.setItem("init_process", data.success);
+        console.log("Estado del proceso de inicio", data.status);
         startBtn.disabled = true;
         StopAllBtn.disabled = false;
+        indicator_status.classList.add("indicator-on");
+        indicator_status.classList.remove("indicator-off")
+        text_2ind_status.textContent = "En proceso"
     });
+
 
     // Botón "Home"
     homeBtn.addEventListener("click", () => {
@@ -80,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         socket.emit("toggle-LampsUVC");
     });
     socket.on("uvc-status", (data) => {
+        localStorage.setItem("state_lamps", data.success);
         console.log("Estado de lamparas", data.status);
         if(data.success){
             indicator_lamps.classList.add("indicator-on");
@@ -92,25 +136,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-
-
     // Boton "Stop robot"
     StopAllBtn.addEventListener("click", () => {
         socket.emit("stop-all");
-
         startBtn.disabled = false;
         StopAllBtn.disabled = true;
     });
-
-    socket.on("robot-is-connect", (data) =>{
-        console.log("Estado del robot", (data));
-        indicator_online.classList.add("indicator-on");
-        indicator_online.classList.remove("indicator-off");
-        text_2ind_online.textContent = "Conectado";
+    socket.on("stop-all-now", (data) => {
+        localStorage.setItem("state-stop", data.success);
+        console.log("Estado del robot", data.success);
+        startBtn.disabled = false;
+        StopAllBtn.disabled = true;
+        indicator_status.classList.add("indicator-off");
+        indicator_status.classList.remove("indicator-on")
+        text_2ind_status.textContent = "Detenido"                
     });
-
-
-
 
     // Botón cámara
     toggleBtn.addEventListener("click", () => {

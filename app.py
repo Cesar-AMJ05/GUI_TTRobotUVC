@@ -153,17 +153,8 @@ def control():
 #Ruta para el stream de video
 @app.route("/video_feed")
 def video_feed():
-    return Response(generate_frame(ruta_udp_local),
+    return Response(generate_frame(ruta_udp_emisor),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
-#Evento cuando el robot este en linea
-@socketio.on("emisor-online")
-def is_conect():
-    print("Robot CONECTADO 🤖")
-    robot_is_connected = True
-    emit("robot-is-connect",{"online":robot_is_connected}, broadcast=True)
-
 
 # Evento para alternar la visibilidad de la cámara
 @socketio.on("toggle_camera")
@@ -174,6 +165,29 @@ def toggle_camera():
     # Avisar a todos los clientes conectados
     emit("camera_status", {"visible": camera_visible}, broadcast=True)
 
+
+# Evento para conocer el estadus de conexion con el red
+@socketio.on("disconnect")
+def handle_is_disconnect():
+    print("Emisor desconectado")
+    emit("is-online", {"status": "offline", "success":False }, broadcast=True)
+@socketio.on("is-online")
+def handle_is_online(data):
+    print("Estado del emisor:", data)
+    emit("is-online", data, broadcast=True)
+
+
+# Evento para iniciar el proceso
+@socketio.on("start-process")
+def handle_start():
+    emit("start-process", {"msg": "Inicia el proceso"}, broadcast=True)
+@socketio.on("go-robot")
+def handle_flag_start(data):
+    print("Re - Robot", data)
+    emit("go-robot", data, broadcast=True)
+    emit("nueva_notificacion", {"msg": "▶️ Inicia el proceso"}, broadcast=True)
+
+
 # Evento para regreso a casa
 @socketio.on("go_home")
 def handle_home_btt():
@@ -183,25 +197,37 @@ def handle_home_btt():
       # Notificación para la UI
     emit("nueva_notificacion", {"msg": "🏠 Botón Home presionado"}, broadcast=True)
 
+
 # Eventos para conmutar el estado de las lamparas UVC (para permitir que se enciendan)
 @socketio.on("toggle-LampsUVC")
 def handle_toggle_LUVC():
     emit("toggle-LampsUVC", {"msg": "Lamparas UVC activas"}, broadcast=True)
-
 @socketio.on("uvc-status")
 def handle_flag_UVC(data):
     print("Re - Toggle UVC: ", data)    
     emit("uvc-status", data, broadcast=True)
-        
+    if data.get("status")== "on":
+        msg = "✅ Lamparas UVC activas"
+    elif data.get("status") == "off":
+        msg = "❌ Lamparas UVC desactivadas"
+    else:
+        msg = "❓ Estatus de lamparas desconocido"
+    emit("nueva_notificacion", {"msg": msg}, broadcast=True)
 
+
+
+# Eventos para detener todo el robot
 @socketio.on("stop-all")
 def handle_emercy_stop():
-    print("⚠️ Paro de emergencia ")
-    emit("stop-all-now", {"msg": "⚠️ Detener todos los procesos"})
+    emit("stop-all", {"msg": "⚠️ Detener todos los procesos"}, broadcast= True)
+
+@socketio.on("stop-all-now")
+def handle_flag_stop(data):
+    print("⚠️ Paro de emergencia")
+    emit("stop-all-now", data, broadcast= True)
     emit("nueva_notificacion", {"msg": "⚠️ Paro de emergencia activado"}, broadcast=True)
 
 #Eventos barra de notificaciones
-
 @socketio.on("limpiar")
 def handle_home():
     print("Notificaciones eliminadas")

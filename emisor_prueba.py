@@ -1,21 +1,26 @@
 import socketio
 
-status_lamps = False;
+status_start = False
+stop_robot = False
+status_lamps = False
 msg_lamps = "off"
 
-
 # Crear cliente SocketIO
-sio = socketio.Client()
+sio = socketio.Client(reconnection=True, reconnection_attempts=5, reconnection_delay=2)
 
+# Evento : Emisor conectado
 @sio.event
 def connect():
-    print("Emisor conectado al servidor")
+    print("✅ Conectado al servidor")
+    # Aquí ya es seguro emitir cualquier evento
+    sio.emit("is-online", {"status": "online", "success": True})
 
 @sio.event
 def disconnect():
-    print("Emisor desconectado al servidor")
+    print("Me desconecte del servidor 😴")
 
-# Escuchar el evento enviado desde la web
+
+# Evento : Regreso a casa 
 @sio.on("home-btt")
 def on_home(data):
     print("🔘 Comando HOME recibido en el emisor")
@@ -24,7 +29,24 @@ def on_home(data):
     # mover_robot_a_home()
 
 
-# Evento de conmutacion de lamparas UVC
+# Evento : Iniciar proceso
+@sio.on("start-process")
+def start_robot(data):
+    global start_robot
+    print("Inicia el proceso del robot")
+    start_robot = not start_robot
+    sio.emit("go-robot", {
+        "status": "go",
+        "success":start_robot
+        })
+
+# También puedes escuchar responses del servidor
+@sio.on("home_response")
+def on_response(data):
+    print("Mensaje del servidor:", data["message"])
+
+
+# Evento : Conmutacion de lamparas UVC
 @sio.on("toggle-LampsUVC")
 def toggle_lamps(data):
     global status_lamps, msg_lamps
@@ -38,12 +60,15 @@ def toggle_lamps(data):
     })
 
 
-
-# También puedes escuchar responses del servidor
-@sio.on("home_response")
-def on_response(data):
-    print("Mensaje del servidor:", data["message"])
-
+#Evento : Paro de emergencia
+@sio.on("stop-all")
+def on_stop_all(data):
+    global stop_robot
+    stop_robot = not stop_robot
+    sio.emit("stop-all-now",{
+        "status": "stop",
+        "success": stop_robot
+        })
 
 # Conectarse al servidor (IP de tu servidor Flask)
 #sio.connect("http://192.168.1.17:5000/")  # <- cambia la IP
