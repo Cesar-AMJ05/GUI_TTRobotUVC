@@ -6,10 +6,11 @@ from flask import Flask, render_template, Response
 from flask_socketio import SocketIO, emit
 import cv2 
 import time
+import threading
 
 
 #Ruta udp emisor de video por red local
-ruta_udp_emisor = "udp://192.168.1.17:1236"
+ruta_udp_emisor = "udp://192.168.1.105:1236"
 
 #Ruta udp local servidor  (para pruebas)
 ruta_udp_local = "udp://127.0.0.1:1235"
@@ -140,6 +141,17 @@ def generate_frame(udp_emisor):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
+
+# Solicitud de datos a emisor
+
+def request_emisor_data():
+    while True:
+        socketio.emit("solicitar-datos", {"request": "data"})
+        time.sleep(15)  # cada 15 segundos
+threading.Thread(target=request_emisor_data, daemon=True).start()
+
+
+
 #Ruta de la página principal
 @app.route("/")
 def home():
@@ -153,7 +165,7 @@ def control():
 #Ruta para el stream de video
 @app.route("/video_feed")
 def video_feed():
-    return Response(generate_frame(ruta_udp_emisor),
+    return Response(generate_frame(ruta_udp_local),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Evento para alternar la visibilidad de la cámara
@@ -234,6 +246,19 @@ def handle_flag_stop(data):
 def handle_home():
     print("Notificaciones eliminadas")
     emit("borrar", broadcast=True)
+
+
+# Eventos para actualizar datos del emisor
+    # Datos de bateria
+@socketio.on("datos-bateria")
+def handle_datos_bateria(data):
+    print("Datos de batería recibidos:", data)
+    emit("datos-bateria", data, broadcast=True)
+    #Datos de nivel de CO2
+@socketio.on("datos-co2")
+def handle_datos_co2(data):
+    print("Datos de CO2 recibidos:", data)
+    emit("datos-co2", data, broadcast=True)
 
 # Evitar debug=True mientras pruebas stream MJPEG
 socketio.run(app, host='0.0.0.0', port=5000, debug=False)

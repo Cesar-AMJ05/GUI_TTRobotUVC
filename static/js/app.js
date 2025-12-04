@@ -27,7 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const StopAllBtn = document.getElementById("stop-btt");
     StopAllBtn.disabled = true;
 
-    // Elementos de monitoreo
+        // Elementos de monitoreo
+    const batteryLevel = document.getElementById("data-battery");
+    const co2Level = document.getElementById("data-co2");
+
 
 
     // Elemenmtos de visuales
@@ -112,6 +115,17 @@ document.addEventListener("DOMContentLoaded", () => {
         text_2ind_status.textContent = "En proceso"
     });
 
+    // Eventos de recopilacion de datos
+
+    socket.on("datos-bateria", (data) => {
+        console.log("Nivel de batería recibido:", data.battery);
+        batteryLevel.textContent = `🔋 ${data.battery}%`;
+    });
+
+    socket.on("datos-co2", (data) => {
+        console.log("Nivel de CO2 recibido:", data.co2);
+        co2Level.textContent = `🌬️ ${data.co2} ppm`;
+    });
 
     // Botón "Home"
     homeBtn.addEventListener("click", () => {

@@ -1,7 +1,8 @@
 import socketio
-import serial
+#import serial
 import time
 import atexit
+import random
 
 status_start = False
 stop_robot = False
@@ -9,8 +10,8 @@ status_lamps = False
 msg_lamps = "off"
 
 # Puerto COM
-arduino = serial.Serial('COM6', 9600, timeout=1)  
-time.sleep(2)  # Esperar a que Arduino se inicialice
+#arduino = serial.Serial('COM6', 9600, timeout=1)  
+#time.sleep(2)  # Esperar a que Arduino se inicialice
 
 
 # Registrar cierre seguro del serial
@@ -39,14 +40,16 @@ def start_robot(data):
     global start_robot
     start_robot = not start_robot
     sio.emit("go-robot", {"status": "go", "success": start_robot})
-    arduino.write(b'A')
-    arduino.flush()
+    print("Iniciando proceso")
+    #arduino.write(b'A')
+    #arduino.flush()
 
 @sio.on("go-home")
 def go_home(data):
     sio.emit("go-home", {"status": "home", "success": True })
-    arduino.write(b'C')
-    arduino.flush()
+    print("Regresando a casa")
+    #arduino.write(b'C')
+    #arduino.flush()
 
 @sio.on("toggle-LampsUVC")
 def toggle_lamps(data):
@@ -54,20 +57,33 @@ def toggle_lamps(data):
     status_lamps = not status_lamps
     msg_lamps = "on" if status_lamps else "off"
     sio.emit("uvc-status", {"status": msg_lamps, "success": status_lamps})
-    arduino.write(b'B')
-    arduino.flush()
+    print("Conmutando lamparas UVC a:", msg_lamps)
+    #arduino.write(b'B')
+    #arduino.flush()
 
 @sio.on("stop-all")
 def on_stop_all(data):
     global stop_robot
     stop_robot = not stop_robot
     sio.emit("stop-all-now", {"status": "stop", "success": stop_robot})
-    arduino.write(b'A')
-    arduino.flush()
+    print("Paro de emergencia activado")
+    #arduino.write(b'A')
+    #arduino.flush()
+
+
+@sio.on("solicitar-datos")
+def solicitar_datos(data):
+    # Simular datos de bateria
+    bateria = random.randint(20, 100)
+    c02 = random.randint(300, 600)
+    sio.emit("datos-bateria", {"battery": bateria, "success": True})
+    sio.emit("datos-co2", {"co2": c02, "success": True})
+    print("Enviando datos de batería:", bateria)
+    print("Enviando datos de CO2:", c02)
 
 # Conectarse al servidor
-sio.connect("http://192.168.0.108:5000")
-
+   
+sio.connect("http://debthk.local:5000")
 # Mantener el cliente corriendo
 try:
     sio.wait()

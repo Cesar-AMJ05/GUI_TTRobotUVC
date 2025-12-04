@@ -52,7 +52,9 @@ Maneja el inicio del proceso de navegación (ojo este proces se puede sostener t
 Maneja el regreso a casa del robot a un area deteminada como "Casa"
 | Paso | Dispositivo de salida | Evento/Comando | Receptor       | Datos                           | Efecto                          |
 | ---- | --------------------- | -------------- | -------------- | ------------------------------- | ------------------------------- |
-| 1    | GUI                   | move-home      | Servidor Flask | Ninguno                         | Inicia el evento regreso a casa |
+| 1    | GUI                   | move-home   
+
+   | Servidor Flask | Ninguno                         | Inicia el evento regreso a casa |
 | 2    | Servidor Flask        | move-home      | Emisor Python  | {"msg":"..."}                   | Activa el handler en emisor     |
 | 3    | Emisor Python         | go-home        | Servidor Flask | {"status":"on","success"\:true} | Inicia el regreso               |
 | 4    | Servidor Flask        | go-home        | GUI            | {"status":"on","success"\:true} | Actualiza UI en panel           |
@@ -83,4 +85,7 @@ Maneja el paro de emergencia del robot, deteniendo todos los procesos
 
 ### Nivel de bateria
 El emisor envia de manera paralela el porcentaje de bateria
-|
+| Paso | Dispositivo de salida | Evento/Comando | Receptor       | Datos                           | Efecto                      |
+| ---- | --------------------- | -------------- | -------------- | ------------------------------- | --------------------------- |
+| 1    | Servidor Flask        | solicitar-datos| Emisor Python | {"request":"data"}              | Solicita datos al emisor  |
+| 2    | Emisor Python         | datos-bateria  | Servidor Flask  | {"battery": num ,"success": true} | Envia datos de bateria     |
