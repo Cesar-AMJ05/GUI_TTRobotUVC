@@ -1,168 +1,66 @@
 # app.py 
 # Servidor con Flask para la interfaz web del Modulo
 # Se emplea Flask-SocketIO para la comunicación 
-
 from flask import Flask, render_template, Response
 from flask_socketio import SocketIO, emit
 import cv2 
 import time
+import threading
 
+#Cargamos configuracion 
+from config import Config
 
-#Ruta udp emisor de video por red local
-ruta_udp_emisor = "udp://192.168.1.17:1236"
-
-#Ruta udp local servidor  (para pruebas)
-ruta_udp_local = "udp://127.0.0.1:1235"
-
+# Configuración inicial
 app = Flask(__name__)
-
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
-
-camera_visible = True
-error_imagen = cv2.imread("static/img/problemastecnicos.jpg")
-if error_imagen is None:
-    raise FileNotFoundError("No se pudo cargar la imagen de error. Verifica la ruta.")
-#Ojo: Verificar el protocolo y la IP
-"""
-    Ojo: Verificar el protocolo y la IP
-    Si se usa UDP O TCP
-    Para produccio se recomienda  RTSP
-"""
-
-#cap = cv2.VideoCapture("udp://192.168.1.17:1236") 
-#cap = cv2.imread("problemastecnicos.jpg")
+app.config.from_object(Config)
 
 
+#Iniciamos SocketIO
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode=Config.ASYNC_MODE)
 
-def try2connectcamera(udp_emisor):
-    """_summary_
-        Intenta acceder a la camara por la ruta udp_emisor
-    Args:
-        udp_emisor (string): La ruta UDP de la cámara
+#Iniciamos rutas web
+from routes.web_routes import register_web_routes
+from routes.camara_routes import register_camera_routes
 
-    Raises:
-        ValueError: Si no se puede acceder a la cámara
+#Iniciamos servicios de camara
+from services.camara_service import generate_frame, toggle_camera_visibility, get_camera_visibility
+from services.camara_service import init_camera_service
 
-    Returns:
-        _type_: Captura de video
-    """
-    
-    cap = cv2.VideoCapture(udp_emisor) 
-    if not cap.isOpened():
-        cap.release()
-        raise ValueError("No se puede acceder a la cámara")
-    print("✅ Conectado a la cámara")
-    return cap
+#Iniciamos eventos de robot
+from sockets.robot_events import register_robot_events
+#Iniciamos eventos de notificaciones
+from sockets.noti_events import noti_events
+#Iniciamos eventos de datos del emisor
+from sockets.data_events import register_data_emisor
+#Iniciamos eventos de control
+from sockets.control_events import register_conotrol_events
 
-def readFrame(cap):
-    """
-        Lee un frame de la captura de video
-    Args:
-        cap (object): Captura de video
+# Registro de rutas web
+register_web_routes(app)
+register_camera_routes(app)
 
-    Raises:
-        ValueError: Si no se puede leer el frame
+#Iniciamos el servicio de la camara
+init_camera_service()
 
-    Returns:
-        _type_: Frame de video
-    """
-    success, frame = cap.read()
-    if not success:
-        raise ValueError("No se puede leer el frame de la cámara")
-    return frame
+# Registro de eventos de robot
+register_robot_events(socketio)
+# Registro de eventos de notificaciones
+noti_events(socketio)
+# Registro de eventos de datos del emisor
+register_data_emisor(socketio)
+#Registro de eventos de control
+register_conotrol_events(socketio)
 
-def codeframe(frame):
-    """
-        Codifica el frame en formato JPEG
-    Args:
-        frame (numpy.ndarray): Frame de video a codificar
 
-    Raises:
-        ValueError: Si no se puede codificar el frame
-
-    Returns:
-        bytes: Frame codificado en bytes
-    """
-    ret, buffer = cv2.imencode('.jpg', frame)
-    if not ret:
-        raise ValueError("No se puede codificar el frame")
-    return buffer.tobytes()
-
-def generate_frame(udp_emisor):
-    """
-        Genera frames para el stream de video, alternando entre la cámara y una imagen de error
-    Args:
-        udp_emisor (string): La ruta UDP de la cámara
-
-    Yields:
-        bytes: Frame de video codificado en bytes
-    """
-    global camera_visible, error_imagen
-    cap = None
-
+# Solicitud de datos a emisor
+def request_emisor_data():
     while True:
-        frame = error_imagen  # por defecto
-
-        if camera_visible:
-            try:
-                # Conectar solo si no hay cap
-                if cap is None:
-                    cap = try2connectcamera(udp_emisor)
-                # Si hay cámara, leer frame
-                if cap is not None:
-                    frame = readFrame(cap)
-
-            except Exception as e:
-                print(f"⚠️ Error con la cámara: {e}")
-                if cap is not None:
-                    cap.release()
-                    cap = None
-                frame = error_imagen
-                time.sleep(2)  # espera antes de reintentar
-        else:
-            # 🔹 Toggle en OFF: solo mostrar imagen de error
-            if cap is not None:
-                cap.release()
-                cap = None
-            frame = error_imagen
-
-        # Codificar y enviar el frame (ya sea cámara o imagen de error)
-        try:
-            frame_bytes = codeframe(frame)
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
-        except Exception as e:
-            print(f"⚠️ Error al procesar el frame: {e}")
-            frame = error_imagen
-            continue
-
-#Ruta de la página principal
-@app.route("/")
-def home():
-    return render_template("index.html")
-
-#Ruta para el stream de video
-@app.route("/video_feed")
-def video_feed():
-    return Response(generate_frame(ruta_udp_local),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+        socketio.emit("solicitar-datos", {"request": "data"})
+        time.sleep(15)  # cada 15 segundos
+threading.Thread(target=request_emisor_data, daemon=True).start()
 
 
-# Evento para alternar la visibilidad de la cámara
-@socketio.on("toggle_camera")
-def toggle_camera():
-    global camera_visible
-    camera_visible = not camera_visible
-    print(f"📷 Estado cámara: {'visible' if camera_visible else 'oculta'}")
-    # Avisar a todos los clientes conectados
-    emit("camera_status", {"visible": camera_visible}, broadcast=True)
 
-@socketio.on("go_home")
-def handle_home_btt():
-    print("🔘 Botón Homet presionado")
-    # Aquí puedes agregar la lógica para manejar el botón Home
-    emit("home_response", {"message": "Botón Home presionado"}, broadcast=True)
 
 
 # Evitar debug=True mientras pruebas stream MJPEG
