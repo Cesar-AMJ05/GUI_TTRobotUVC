@@ -1,5 +1,4 @@
 import socketio
-#import serial
 import time
 import atexit
 import random
@@ -9,18 +8,7 @@ stop_robot = False
 status_lamps = False
 msg_lamps = "off"
 
-# Puerto COM
-#arduino = serial.Serial('COM6', 9600, timeout=1)  
-#time.sleep(2)  # Esperar a que Arduino se inicialice
 
-
-# Registrar cierre seguro del serial
-def cerrar_serial():
-    if arduino.is_open:
-        arduino.close()
-        print("Puerto serial cerrado ")
-
-atexit.register(cerrar_serial)
 
 # Crear cliente SocketIO
 sio = socketio.Client(reconnection=True, reconnection_attempts=5, reconnection_delay=2)
@@ -48,8 +36,7 @@ def start_robot(data):
 def go_home(data):
     sio.emit("go-home", {"status": "home", "success": True })
     print("Regresando a casa")
-    #arduino.write(b'C')
-    #arduino.flush()
+
 
 @sio.on("toggle-LampsUVC")
 def toggle_lamps(data):
@@ -58,8 +45,6 @@ def toggle_lamps(data):
     msg_lamps = "on" if status_lamps else "off"
     sio.emit("uvc-status", {"status": msg_lamps, "success": status_lamps})
     print("Conmutando lamparas UVC a:", msg_lamps)
-    #arduino.write(b'B')
-    #arduino.flush()
 
 @sio.on("stop-all")
 def on_stop_all(data):
@@ -67,8 +52,6 @@ def on_stop_all(data):
     stop_robot = not stop_robot
     sio.emit("stop-all-now", {"status": "stop", "success": stop_robot})
     print("Paro de emergencia activado")
-    #arduino.write(b'A')
-    #arduino.flush()
 
 
 @sio.on("solicitar-datos")
@@ -85,7 +68,4 @@ def solicitar_datos(data):
    
 sio.connect("http://debthk.local:5000")
 # Mantener el cliente corriendo
-try:
-    sio.wait()
-finally:
-    cerrar_serial()  # Cierra el puerto si se interrumpe con Ctrl+C
+

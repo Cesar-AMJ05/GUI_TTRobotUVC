@@ -2,70 +2,83 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <title>🎮Control Manual</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>🎮 Control Manual</title>
         <!-- Cargar CSS desde static -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
-
     <body>
         <div class="app">
             <header class="top-bar">
                 <h1>Control Manual</h1>
                 <div class="top-buttons">
-                    <!-- Botón de monitor -->
+                    <!-- Botón de monitor (regreso al panel) -->
                     <button id="panel-bttn" class="external-button">
                         <img src="{{ url_for('static', filename='img/monitor_icon.png') }}" alt="Monitor">
                     </button>
-                    <!--Boton notificaciones-->
-                    <button  class="notificacion">Notificaciones</button>
+                    
+                    <!-- Botón de notificaciones -->
+                    <button id="notification-bttn" class="external-button">
+                        <img src="{{ url_for('static', filename='img/icon_bell.png') }}" alt="Notificaciones">
+                    </button>
                 </div>
             </header>
         </div>
 
         <main class="control-layout">
+            <!-- Panel de cámara -->
             <aside class="camera-panel2">
                 <h2>Vista de la cámara</h2>
                 <div class="camera-container">
-                    <img id="camera-stream" src="{{ url_for('video_feed') }}" width="640" height="480">
+                    <img id="camera-stream" src="{{ url_for('video_feed') }}" alt="Stream de cámara" width="640" height="480">
                 </div>
             </aside>
+
+            <!-- Panel de controles direccionales -->
             <aside class="control-buttons-panel">
                 <div class="grid-controls">
-                    <!--Fila 1-->
-                    <button class="joy-button" id="up_left-btt">
+                    <!-- Fila 1 -->
+                    <button class="joy-button" id="up_left-btt" aria-label="Arriba Izquierda">
                         <img src="{{ url_for('static', filename='img/Icons_Control/up_left.png') }}" alt="Up Left">
                     </button>
-                    <button class="joy-button" id="up-btt">
+                    <button class="joy-button" id="up-btt" aria-label="Arriba">
                         <img src="{{ url_for('static', filename='img/Icons_Control/up.png') }}" alt="Up">
                     </button>
-                    <button class="joy-button" id="up_right-btt">
+                    <button class="joy-button" id="up_right-btt" aria-label="Arriba Derecha">
                         <img src="{{ url_for('static', filename='img/Icons_Control/up_right.png') }}" alt="Up Right">
                     </button>
 
-                    <!--Fila 2-->
-                    <button class="joy-button" id="left-btt">
+                    <!-- Fila 2 -->
+                    <button class="joy-button" id="left-btt" aria-label="Izquierda">
                         <img src="{{ url_for('static', filename='img/Icons_Control/left.png') }}" alt="Left">
                     </button>  
-                    <img class="robotito" src="{{ url_for('static', filename='img/Robot8bits.png') }}" alt="Robotito">
-                    <button class="joy-button" id="right-btt">
+                    <img class="robotito" src="{{ url_for('static', filename='img/Robot8bits.png') }}" alt="Robot Central">
+                    <button class="joy-button" id="right-btt" aria-label="Derecha">
                         <img src="{{ url_for('static', filename='img/Icons_Control/right.png') }}" alt="Right">
                     </button>
 
-                    <!--Fila 3-->
-                    <button class="joy-button" id="down_left-btt">
+                    <!-- Fila 3 -->
+                    <button class="joy-button" id="down_left-btt" aria-label="Abajo Izquierda">
                         <img src="{{ url_for('static', filename='img/Icons_Control/down_left.png') }}" alt="Down Left">
                     </button>
-                    <button class="joy-button" id="down-btt">
+                    <button class="joy-button" id="down-btt" aria-label="Abajo">
                         <img src="{{ url_for('static', filename='img/Icons_Control/down.png') }}" alt="Down">
                     </button>
-                    <button class="joy-button" id="down_right-btt">
+                    <button class="joy-button" id="down_right-btt" aria-label="Abajo Derecha">
                         <img src="{{ url_for('static', filename='img/Icons_Control/down_right.png') }}" alt="Down Right">
                     </button>
-
-                    
                 </div>
+
+                <!-- Botón de marcar punto de interés -->
+                <button id="flag-bttn" class="flag-button">
+                    <img src="{{ url_for('static', filename='img/Icons_Control/flagpoint.png') }}" alt="Marcar punto">
+                    <span>SET POINT</span>
+                </button>
             </aside>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='js/controljs.js') }}"></script>
+        </main>
+
+        <!-- Scripts -->
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <script src="{{ url_for('static', filename='js/controljs.js') }}"></script>
     </body>
 </html>
