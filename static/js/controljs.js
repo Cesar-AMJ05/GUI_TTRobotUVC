@@ -194,13 +194,24 @@ if (panelButton) {
     });
 }
 
-// Botón de bandera (preparado para funcionalidad futura)
+// Botón de bandera - Marcar waypoint
 const flagButton = document.getElementById('flag-bttn');
 if (flagButton) {
     flagButton.addEventListener('click', () => {
-        console.log('🚩 Botón de bandera presionado (funcionalidad pendiente)');
-        // TODO: Implementar funcionalidad de bandera
-        // Posibles usos: marcar posición, establecer waypoint, etc.
+        console.log('🚩 Marcando punto de interés...');
+        
+        // Enviar comando para marcar waypoint
+        socket.emit('mark_waypoint', {
+            timestamp: Date.now(),
+            // Puedes agregar más datos como posición GPS si la tienes
+            // position: { x: robotX, y: robotY }
+        });
+        
+        // Feedback visual
+        flagButton.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            flagButton.style.transform = 'scale(1)';
+        }, 200);
     });
 }
 
@@ -219,11 +230,11 @@ if (notificationButton) {
 // ========================================
 
 socket.on('connect', () => {
-    console.log('✅ Conectado el control al servidor');
+    console.log('✅ Conectado al servidor');
 });
 
 socket.on('disconnect', () => {
-    console.log('❌ Desconectado el control del servidor');
+    console.log('❌ Desconectado del servidor');
     
     // Si se desconecta mientras hay un botón presionado
     if (isPressed && activeButton) {
@@ -234,17 +245,35 @@ socket.on('disconnect', () => {
 });
 
 // ========================================
-// RESPUESTA DEL SERVIDOR (Opcional)
+// RESPUESTAS DEL SERVIDOR
 // ========================================
 
+// Respuesta de comandos de control
 socket.on('control_response', (data) => {
     console.log('📨 Respuesta del servidor:', data);
     
-    // Aquí puedes manejar confirmaciones o errores del servidor
     if (data.status === 'error') {
         console.error('❌ Error en control:', data.message);
-        // Podrías mostrar una notificación al usuario
+        // Aquí podrías mostrar una notificación al usuario
+    } else {
+        console.log('✅', data.message);
     }
+});
+
+// Respuesta de waypoint marcado
+socket.on('waypoint_response', (data) => {
+    console.log('🚩 Waypoint guardado:', data);
+    
+    if (data.status === 'success') {
+        console.log(`✅ Punto de interés #${data.waypoint_id} marcado correctamente`);
+        // Aquí podrías mostrar una notificación visual
+        // showNotification('Punto marcado correctamente');
+    }
+});
+
+// Confirmación de conexión
+socket.on('connection_response', (data) => {
+    console.log('🔌', data.message);
 });
 
 // ========================================

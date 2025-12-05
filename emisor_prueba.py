@@ -68,4 +68,7 @@ def solicitar_datos(data):
    
 sio.connect("http://debthk.local:5000")
 # Mantener el cliente corriendo
-
+try:
+    sio.wait()
+finally:
+    sio.disconnect()

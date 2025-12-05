@@ -106,7 +106,9 @@ ffmpeg -f dshow -rtbufsize 100M -i video="c922 Pro Stream Webcam" -vf scale=640:
 ## 📌 Producción (Orange Pi 5 Max)
 
 ```bash
-ffmpeg -f v4l2 -i /dev/video2 -vcodec libx264 -preset ultrafast -tune zerolatency -f rtsp rtsp://127.0.0.1:8554/live.sdp
+ffmpeg -f v4l2 -input_format mjpeg -video_size 1920x1080 -i /dev/video0 \
+       -c:v copy \
+       -f mpegts udp://192.168.0.200:1235
 ```
 
 * Python / Flask recibe:
