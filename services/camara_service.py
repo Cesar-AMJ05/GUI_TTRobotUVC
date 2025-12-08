@@ -122,7 +122,7 @@ def generate_frame(udp_emisor):
             try:
                 # Intentar conectar si no hay conexión
                 if cap is None:
-                    cap = try2connectcamera(udp_emisor)
+                    cap = try2connectcamera(Config.UDP_EMISOR)
                 
                 # Leer frame si hay conexión
                 if cap is not None:

@@ -57,7 +57,7 @@ Integrated Camera: Integrated C (usb-0000:00:14.0-6):
     /dev/video0
     /dev/video1
 ```
-
+ 
 * Para cámara USB: usar `/dev/video2`.
 * Para cámara integrada: usar `/dev/video0`.
 
@@ -106,9 +106,7 @@ ffmpeg -f dshow -rtbufsize 100M -i video="c922 Pro Stream Webcam" -vf scale=640:
 ## 📌 Producción (Orange Pi 5 Max)
 
 ```bash
-ffmpeg -f v4l2 -input_format mjpeg -video_size 1920x1080 -i /dev/video0 \
-       -c:v copy \
-       -f mpegts udp://192.168.0.200:1235
+ffmpeg -f v4l2     -input_format mjpeg     -framerate 30     -video_size 640x480     -i /dev/video0     -vcodec mpeg1video     -qscale:v 3     -b:v 8M     -pix_fmt yuv420p     -f mpegts udp://192.168.0.200:1235
 ```
 
 * Python / Flask recibe:
